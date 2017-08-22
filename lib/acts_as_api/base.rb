@@ -29,12 +29,12 @@ module ActsAsApi
       # *Note*: There is only whitelisting for api accessible attributes.
       # So once the model acts as api, you have to determine all attributes here that should
       # be contained in the api responses.
-      def api_accessible(api_template, options = {}, &block)
+      def api_accessible(api_template, options = {})
         attributes = api_accessible_attributes(api_template).try(:dup) || ApiTemplate.new(api_template)
         attributes.merge!(api_accessible_attributes(options[:extend])) if options[:extend]
 
         if block_given?
-          yield attributes
+          Proc.new.call attributes
         end
 
         class_attribute "api_accessible_#{api_template}".to_sym
